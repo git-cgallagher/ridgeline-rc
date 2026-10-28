@@ -1,0 +1,7 @@
+node_modules/
+dist/
+app/
+build/icon.iconset/
+dist-build.log
+npm-ci.log
+.DS_Store
