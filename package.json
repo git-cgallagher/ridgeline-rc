@@ -1,0 +1,24 @@
+{
+  "name": "ridgeline-rc",
+  "productName": "Ridgeline RC",
+  "version": "1.0.0",
+  "description": "An original top-down RC truck racing game.",
+  "main": "main.js",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build:app": "node scripts/build-app.js",
+    "check": "npm run build:app && node scripts/check-game.js",
+    "build:icon": "electron scripts/make-icon.js && iconutil -c icns build/icon.iconset -o build/icon.icns",
+    "start": "npm run build:app && electron .",
+    "pack:mac": "npm run build:app && electron-packager . \"Ridgeline RC\" --platform=darwin --arch=universal --icon=build/icon --app-bundle-id=net.cgallagher.ridgelinerc --asar --overwrite --out=dist --ignore=\"^/(index\\.html|README\\.md|CHANGELOG\\.md|\\.gitignore|dist-build\\.log|scripts|build|dist)$\" && codesign --force --deep --sign - \"dist/Ridgeline RC-darwin-universal/Ridgeline RC.app\" && hdiutil create -volname \"Ridgeline RC\" -srcfolder \"dist/Ridgeline RC-darwin-universal/Ridgeline RC.app\" -ov -format UDZO dist/Ridgeline-RC-mac.dmg",
+    "pack:win": "npm run build:app && electron-packager . \"Ridgeline RC\" --platform=win32 --arch=x64 --icon=build/icon --asar --overwrite --out=dist --ignore=\"^/(index\\.html|README\\.md|CHANGELOG\\.md|\\.gitignore|dist-build\\.log|scripts|build|dist)$\" && cd dist && rm -f Ridgeline-RC-windows-x64.zip && zip -qry Ridgeline-RC-windows-x64.zip \"Ridgeline RC-win32-x64\"",
+    "pack": "npm run pack:mac && npm run pack:win"
+  },
+  "devDependencies": {
+    "@electron/packager": "20.3.0",
+    "@fontsource/atkinson-hyperlegible": "5.3.0",
+    "@fontsource/silkscreen": "5.3.0",
+    "electron": "44.7.1"
+  }
+}
