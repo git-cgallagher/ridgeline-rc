@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Build desktop page and check the game script
+        run: npm run check
+
+  package:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Make sure the Electron binary downloaded
+        run: '[ -d node_modules/electron/dist ] || node node_modules/electron/install.js'
+      - name: Build macOS DMG and Windows zip
+        run: npm run pack
+      - name: Check outputs
+        run: |
+          set -euo pipefail
+          APP="dist/Ridgeline RC-darwin-universal/Ridgeline RC.app"
+          lipo -archs "$APP/Contents/MacOS/Ridgeline RC" | grep -q arm64
+          lipo -archs "$APP/Contents/MacOS/Ridgeline RC" | grep -q x86_64
+          codesign --verify --deep "$APP"
+          hdiutil verify dist/Ridgeline-RC-mac.dmg
+          unzip -l dist/Ridgeline-RC-windows-x64.zip | grep -q "Ridgeline RC.exe"
