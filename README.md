@@ -60,7 +60,7 @@ The Mac and Windows apps use Electron to wrap the same game. They work offline b
 **You need:** macOS (it builds both platforms, and Windows builds don't need Wine) and Node 22+.
 
 ```bash
-npm ci              # installs Electron 44.7.1, @electron/packager and the two font packages
+npm ci              # installs Electron 44.9.1, @electron/packager and the two font packages
 npm start           # runs the game in a desktop window
 npm run build:icon  # only when the icon art changes; writes build/icon.icns + build/icon.ico
 npm run pack        # builds both platforms (or pack:mac / pack:win)
